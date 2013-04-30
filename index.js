@@ -35,6 +35,7 @@ function MuxDemux (opts, onConnection) {
         return
       if(event != 'new')
         return outer.emit('unknown', id)
+      data[1] = JSON.parse(data[1])
       md.emit('connection', createStream(id, data[1].meta, data[1].opts))
     }
     else if (event === 'pause')
@@ -165,7 +166,7 @@ function MuxDemux (opts, onConnection) {
       opts.readable = opts.writable = true
     var s = createStream(createID(), meta, opts)
     var _opts = {writable: opts.readable, readable: opts.writable}
-    md._data([s.id, 'new', {meta: meta, opts: _opts}])
+    md._data([s.id, 'new', JSON.stringify({meta: meta, opts: _opts})])
     return s
   }
   outer.createWriteStream = function (meta) {
